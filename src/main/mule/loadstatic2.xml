@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ce627b60-1e93-435a-a456-8c4785a6d7ce" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="f0a2fbc3-14d7-4d3c-9cee-7cdadf407252" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="root" database="college666" />
+	</db:config>
+	<flow name="loadstatic2Flow" doc:id="c3b64c4f-6b47-4559-a039-95cbc6f30998" >
+		<http:listener doc:name="Listener" doc:id="b16aa538-985f-4f06-8020-2d09d86414bc" config-ref="HTTP_Listener_config" path="/harika"/>
+		<db:select doc:name="Select" doc:id="24bb91de-9640-4e51-b758-e719ca4ecf73" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from student;
+]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="e916f0d7-a086-4c1a-815a-472caba8e613" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
